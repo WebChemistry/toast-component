@@ -3,31 +3,36 @@
 namespace WebChemistry\Toast;
 
 use Nette\Application\UI\Control;
+use Nette\Localization\ITranslator;
 
-final class ToastComponent extends Control {
+final class ToastComponent extends Control implements IToastComponent {
 
 	/** @var Control|null */
-	protected $control;
+	private $control;
 
 	/** @var bool */
-	protected $allFlashes = false;
+	private $allFlashes = false;
 
 	/** @var callable|null */
-	protected $translator;
+	private $translator;
 
 	public function setFlashesControl(Control $control): void {
 		$this->control = $control;
+	}
+
+	public function setTranslator(ITranslator $translator): void {
+		$this->translator = [$translator, 'translate'];
 	}
 
 	public function setCallbackTranslator(callable $translator): void {
 		$this->translator = $translator;
 	}
 
-	protected function setCaptureAllFlashes() {
+	private function setCaptureAllFlashes() {
 		$this->allFlashes = true;
 	}
 
-	protected function getControl(): Control {
+	private function getControl(): Control {
 		if (!$this->control) {
 			$this->control = $this->lookup(Control::class);
 		}
@@ -35,7 +40,7 @@ final class ToastComponent extends Control {
 		return $this->control;
 	}
 
-	protected function getFlashes(): iterable {
+	private function getFlashes(): iterable {
 		$presenter = $this->getPresenter();
 		if (!$presenter->hasFlashSession()) {
 			return;
@@ -78,6 +83,14 @@ final class ToastComponent extends Control {
 		$template->flashes = $this->getFlashes();
 
 		$template->render();
+	}
+
+	private function resolveType(string $type): string {
+		if (!$this->translator) {
+			return ucfirst($type);
+		}
+
+		return ($this->translator)($type);
 	}
 
 }
