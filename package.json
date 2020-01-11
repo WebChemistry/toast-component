@@ -1,0 +1,27 @@
+{
+  "name": "@webchemistry/toast-component",
+  "version": "1.0.0",
+  "description": "Toast for nette",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "webpack",
+    "dev": "webpack --progress --colors --watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/WebChemistry/toast-component.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/WebChemistry/toast-component/issues"
+  },
+  "homepage": "https://github.com/WebChemistry/toast-component#readme",
+  "devDependencies": {
+    "@babel/core": "^7.5.5",
+    "@babel/preset-env": "^7.5.5",
+    "babel-loader": "^8.0.6",
+    "webpack": "^4.39.2",
+    "webpack-cli": "^3.3.6"
+  }
+}

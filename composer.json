@@ -1,0 +1,12 @@
+{
+	"name": "webchemistry/toast-component",
+	"description": "Toast for nette",
+	"require": {
+		"php": ">= 7.2"
+	},
+	"autoload": {
+		"psr-4": {
+			"WebChemistry\\Toast\\": "src/"
+		}
+	}
+}
