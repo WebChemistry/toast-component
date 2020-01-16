@@ -100,12 +100,12 @@ return /******/ (function(modules) { // webpackBootstrap
 /*!************************!*\
   !*** ./asset/index.js ***!
   \************************/
-/*! exports provided: createNotification */
+/*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "createNotification", function() { return createNotification; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return createToast; });
 const BASE_TIMEOUT = 4000;
 
 function hideElements(elements, timeout = 0) {
@@ -159,12 +159,12 @@ function createElement(title, content, type) {
   return template.content.firstElementChild;
 }
 
-function createNotification(title, content, type = 'success') {
+hideElements(document.querySelectorAll('.toast__cell > .toast'), BASE_TIMEOUT);
+function createToast(title, content, type = 'success') {
   const el = createElement(title, content, type);
   document.querySelector('.toast__cell').appendChild(el);
   hideElement(el, BASE_TIMEOUT);
 }
-hideElements(document.querySelectorAll('.toast__cell > .toast'), BASE_TIMEOUT);
 
 /***/ })
 

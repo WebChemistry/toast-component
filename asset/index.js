@@ -54,11 +54,11 @@ function createElement(title, content, type) {
 	return template.content.firstElementChild;
 }
 
-export function createNotification(title, content, type = 'success') {
+hideElements(document.querySelectorAll('.toast__cell > .toast'), BASE_TIMEOUT);
+
+export default function createToast(title, content, type = 'success') {
 	const el = createElement(title, content, type);
 
 	document.querySelector('.toast__cell').appendChild(el);
 	hideElement(el, BASE_TIMEOUT);
 }
-
-hideElements(document.querySelectorAll('.toast__cell > .toast'), BASE_TIMEOUT);
