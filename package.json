@@ -1,6 +1,6 @@
 {
   "name": "@webchemistry/toast-component",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Toast for nette",
   "main": "dist/index.js",
   "scripts": {
