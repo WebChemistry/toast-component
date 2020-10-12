@@ -8,7 +8,7 @@ use Nette\Localization\ITranslator;
 final class ToastComponent extends Control implements IToastComponent
 {
 
-	private ?Control $control;
+	private Control $control;
 
 	private bool $allFlashes = false;
 
@@ -44,7 +44,7 @@ final class ToastComponent extends Control implements IToastComponent
 
 	private function getControl(): Control
 	{
-		if (!$this->control) {
+		if (!isset($this->control)) {
 			$this->control = $this->lookup(Control::class);
 		}
 
