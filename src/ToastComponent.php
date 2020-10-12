@@ -5,34 +5,45 @@ namespace WebChemistry\Toast;
 use Nette\Application\UI\Control;
 use Nette\Localization\ITranslator;
 
-final class ToastComponent extends Control implements IToastComponent {
+final class ToastComponent extends Control implements IToastComponent
+{
 
-	/** @var Control|null */
-	private $control;
+	private ?Control $control;
 
-	/** @var bool */
-	private $allFlashes = false;
+	private bool $allFlashes = false;
 
 	/** @var callable|null */
 	private $translator;
 
-	public function setFlashesControl(Control $control): void {
+	private bool $subject = false;
+
+	public function setFlashesControl(Control $control): void
+	{
 		$this->control = $control;
 	}
 
-	public function setTranslator(ITranslator $translator): void {
+	public function setSubject(bool $subject): void
+	{
+		$this->subject = $subject;
+	}
+
+	public function setTranslator(ITranslator $translator): void
+	{
 		$this->translator = [$translator, 'translate'];
 	}
 
-	public function setCallbackTranslator(callable $translator): void {
+	public function setCallbackTranslator(callable $translator): void
+	{
 		$this->translator = $translator;
 	}
 
-	private function setCaptureAllFlashes() {
+	private function setCaptureAllFlashes()
+	{
 		$this->allFlashes = true;
 	}
 
-	private function getControl(): Control {
+	private function getControl(): Control
+	{
 		if (!$this->control) {
 			$this->control = $this->lookup(Control::class);
 		}
@@ -40,24 +51,13 @@ final class ToastComponent extends Control implements IToastComponent {
 		return $this->control;
 	}
 
-	private function getFlashes(): iterable {
+	private function getFlashes(): iterable
+	{
 		$presenter = $this->getPresenter();
 		if (!$presenter->hasFlashSession()) {
 			return;
-
-		} else if ($this->allFlashes) {
-			foreach ($presenter->getFlashSession() as $flashes) {
-				if ($flashes) {
-					foreach ($flashes as $flash) {
-						yield [
-							'type' => $flash->type,
-							'subject' => $this->resolveType($flash->type),
-							'message' => $flash->message,
-						];
-					}
-				}
-			}
-
+		} elseif ($this->allFlashes) {
+			$collection = $presenter->getFlashSession();
 		} else {
 			$id = $this->getControl()->getParameterId('flash');
 			$session = $presenter->getFlashSession();
@@ -65,18 +65,26 @@ final class ToastComponent extends Control implements IToastComponent {
 				return;
 			}
 
-			foreach ((array) $session->$id as $flash) {
+			$collection = [(array) $session->$id];
+		}
+
+		foreach ($collection as $flashes) {
+			if (!$flashes) {
+				continue;
+			}
+
+			foreach ($flashes as $flash) {
 				yield [
 					'type' => $flash->type,
-					'subject' => $this->resolveType($flash->type),
+					'subject' => $this->subject ? $this->resolveType($flash->type) : null,
 					'message' => $flash->message,
 				];
 			}
-
 		}
 	}
 
-	public function render(): void {
+	public function render(): void
+	{
 		$template = $this->getTemplate();
 		$template->setFile(__DIR__ . '/templates/toast.latte');
 
@@ -85,7 +93,8 @@ final class ToastComponent extends Control implements IToastComponent {
 		$template->render();
 	}
 
-	private function resolveType(string $type): string {
+	private function resolveType(string $type): string
+	{
 		if (!$this->translator) {
 			return ucfirst($type);
 		}

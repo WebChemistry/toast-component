@@ -2,7 +2,8 @@
 
 namespace WebChemistry\Toast;
 
-interface IToastComponentFactory {
+interface IToastComponentFactory
+{
 
 	public function create(): IToastComponent;
 

@@ -2,16 +2,18 @@
 
 namespace WebChemistry\Toast;
 
-trait TToastPresenter {
+trait TToastPresenter
+{
 
-	/** @var IToastComponentFactory */
-	private $toastComponentFactory;
+	private IToastComponentFactory $toastComponentFactory;
 
-	final public function injectTToastPresenter(IToastComponentFactory $toastComponentFactory): void {
+	final public function injectTToastPresenter(IToastComponentFactory $toastComponentFactory): void
+	{
 		$this->toastComponentFactory = $toastComponentFactory;
 	}
 
-	protected function createComponentToast(): IToastComponent {
+	protected function createComponentToast(): IToastComponent
+	{
 		return $this->toastComponentFactory->create();
 	}
 

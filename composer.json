@@ -2,7 +2,7 @@
 	"name": "webchemistry/toast-component",
 	"description": "Toast for nette",
 	"require": {
-		"php": ">= 7.2"
+		"php": ">= 7.4"
 	},
 	"autoload": {
 		"psr-4": {

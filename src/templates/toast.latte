@@ -6,7 +6,7 @@
 					<div class="toast__icon__svg"></div>
 				</div>
 				<div class="toast__content">
-					<p class="toast__type">{$flash[subject]}</p>
+					<p class="toast__type" n:if="$flash[subject]">{$flash[subject]}</p>
 					<p class="toast__message">{$flash[message]}</p>
 				</div>
 				<div class="toast__close">

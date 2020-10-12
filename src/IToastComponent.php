@@ -5,7 +5,8 @@ namespace WebChemistry\Toast;
 use Nette\Application\UI\Control;
 use Nette\Localization\ITranslator;
 
-interface IToastComponent {
+interface IToastComponent
+{
 
 	public function setFlashesControl(Control $control): void;
 
