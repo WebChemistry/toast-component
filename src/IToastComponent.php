@@ -8,10 +8,10 @@ use Nette\Localization\ITranslator;
 interface IToastComponent
 {
 
-	public function setFlashesControl(Control $control): void;
+	public function setSubject(bool $subject): static;
 
-	public function setTranslator(ITranslator $translator): void;
+	public function setTranslator(ITranslator $translator): static;
 
-	public function setCallbackTranslator(callable $translator): void;
+	public function setCallbackTranslator(callable $translator): static;
 
 }

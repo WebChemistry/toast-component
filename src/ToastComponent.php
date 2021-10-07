@@ -2,84 +2,61 @@
 
 namespace WebChemistry\Toast;
 
+use Nette\Application\IPresenter;
 use Nette\Application\UI\Control;
+use Nette\Application\UI\Presenter;
 use Nette\Localization\ITranslator;
 
 final class ToastComponent extends Control implements IToastComponent
 {
-
-	private Control $control;
-
-	private bool $allFlashes = false;
 
 	/** @var callable|null */
 	private $translator;
 
 	private bool $subject = false;
 
-	public function setFlashesControl(Control $control): void
+	public function __construct(
+		private Control $control,
+	)
 	{
-		$this->control = $control;
 	}
 
-	public function setSubject(bool $subject): void
+	public function setSubject(bool $subject): static
 	{
 		$this->subject = $subject;
+
+		return $this;
 	}
 
-	public function setTranslator(ITranslator $translator): void
+	public function setTranslator(ITranslator $translator): static
 	{
 		$this->translator = [$translator, 'translate'];
+
+		return $this;
 	}
 
-	public function setCallbackTranslator(callable $translator): void
+	public function setCallbackTranslator(callable $translator): static
 	{
 		$this->translator = $translator;
-	}
 
-	private function setCaptureAllFlashes()
-	{
-		$this->allFlashes = true;
-	}
-
-	private function getControl(): Control
-	{
-		if (!isset($this->control)) {
-			$this->control = $this->lookup(Control::class);
-		}
-
-		return $this->control;
+		return $this;
 	}
 
 	private function getFlashes(): iterable
 	{
-		$presenter = $this->getPresenter();
-		if (!$presenter->hasFlashSession()) {
-			return;
-		} elseif ($this->allFlashes) {
-			$collection = $presenter->getFlashSession();
-		} else {
-			$id = $this->getControl()->getParameterId('flash');
-			$session = $presenter->getFlashSession();
-			if (!isset($session->$id)) {
-				return;
-			}
+		$id = $this->control->getParameterId('flash');
+		$session = $this->control->getPresenter()->getFlashSession();
 
-			$collection = [(array) $session->$id];
+		if (!isset($session->$id)) {
+			return;
 		}
 
-		foreach ($collection as $flashes) {
-			if (!$flashes) {
-				continue;
-			}
-
-			foreach ($flashes as $flash) {
-				yield [
-					'type' => $flash->type,
-					'subject' => $this->subject ? $this->resolveType($flash->type) : null,
-					'message' => $flash->message,
-				];
-			}
+		foreach ($session->$id as $flash) {
+			yield [
+				'type' => $flash->type,
+				'subject' => $this->subject ? $this->resolveType($flash->type) : null,
+				'message' => $flash->message,
+			];
 		}
 	}
 

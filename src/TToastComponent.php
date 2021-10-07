@@ -2,7 +2,7 @@
 
 namespace WebChemistry\Toast;
 
-trait TToastPresenter
+trait TToastComponent
 {
 
 	private IToastComponentFactory $toastComponentFactory;
@@ -14,7 +14,7 @@ trait TToastPresenter
 
 	protected function createComponentToast(): IToastComponent
 	{
-		return $this->toastComponentFactory->create();
+		return $this->toastComponentFactory->create($this);
 	}
 
 }
