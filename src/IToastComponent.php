@@ -2,15 +2,14 @@
 
 namespace WebChemistry\Toast;
 
-use Nette\Application\UI\Control;
-use Nette\Localization\ITranslator;
+use Nette\Localization\Translator;
 
 interface IToastComponent
 {
 
 	public function setSubject(bool $subject): static;
 
-	public function setTranslator(ITranslator $translator): static;
+	public function setTranslator(Translator $translator): static;
 
 	public function setCallbackTranslator(callable $translator): static;
 

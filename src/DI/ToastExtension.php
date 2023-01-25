@@ -3,7 +3,7 @@
 namespace WebChemistry\Toast\DI;
 
 use Nette\DI\CompilerExtension;
-use Nette\Localization\ITranslator;
+use Nette\Localization\Translator;
 use Nette\Schema\Expect;
 use Nette\Schema\Schema;
 use WebChemistry\Toast\IToastComponentFactory;
@@ -33,7 +33,7 @@ final class ToastExtension extends CompilerExtension
 		if ($config->types) {
 			$translator = $builder->addDefinition($this->prefix('translator'))
 				->setAutowired(false)
-				->setType(ITranslator::class)
+				->setType(Translator::class)
 				->setFactory(ArrayTranslator::class, [$config->types]);
 
 			$toast->addSetup('setTranslator', [$translator]);

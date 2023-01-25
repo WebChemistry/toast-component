@@ -2,23 +2,30 @@
 
 namespace WebChemistry\Toast;
 
-use Nette\Application\IPresenter;
 use Nette\Application\UI\Control;
-use Nette\Application\UI\Presenter;
-use Nette\Localization\ITranslator;
+use Nette\Localization\Translator;
 
 final class ToastComponent extends Control implements IToastComponent
 {
 
-	/** @var callable|null */
+	/** @var (callable(mixed, mixed...): string)|null */
 	private $translator;
 
 	private bool $subject = false;
 
+	/** @var array{type: string, subject: string|null, message: string}[] */
+	private array $flashes;
+
 	public function __construct(
 		private Control $control,
+		?Translator $translator = null,
 	)
 	{
+		if ($translator) {
+			$this->setTranslator($translator);
+		}
+
+		$this->getFlashes(); // autostart session
 	}
 
 	public function setSubject(bool $subject): static
@@ -28,13 +35,16 @@ final class ToastComponent extends Control implements IToastComponent
 		return $this;
 	}
 
-	public function setTranslator(ITranslator $translator): static
+	public function setTranslator(Translator $translator): static
 	{
 		$this->translator = [$translator, 'translate'];
 
 		return $this;
 	}
 
+	/**
+	 * @param callable(mixed, mixed...): string $translator
+	 */
 	public function setCallbackTranslator(callable $translator): static
 	{
 		$this->translator = $translator;
@@ -42,22 +52,29 @@ final class ToastComponent extends Control implements IToastComponent
 		return $this;
 	}
 
-	private function getFlashes(): iterable
+	/**
+	 * @return array{type: string, subject: string|null, message: string}[]
+	 */
+	private function getFlashes(): array
 	{
-		$id = $this->control->getParameterId('flash');
-		$session = $this->control->getPresenter()->getFlashSession();
+		if (!isset($this->flashes)) {
+			$id = $this->control->getParameterId('flash');
+			$session = $this->control->getPresenter()->getFlashSession();
+			$flashes = $session->get($id);
+			$this->flashes = [];
 
-		if (!isset($session->$id)) {
-			return;
+			if (is_array($flashes)) {
+				foreach ($flashes as $flash) {
+					$this->flashes[] = [
+						'type' => $flash->type,
+						'subject' => $this->subject ? $this->resolveType($flash->type) : null,
+						'message' => $flash->message,
+					];
+				}
+			}
 		}
 
-		foreach ($session->$id as $flash) {
-			yield [
-				'type' => $flash->type,
-				'subject' => $this->subject ? $this->resolveType($flash->type) : null,
-				'message' => $flash->message,
-			];
-		}
+		return $this->flashes;
 	}
 
 	public function render(): void

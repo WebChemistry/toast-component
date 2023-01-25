@@ -2,9 +2,9 @@
 
 namespace WebChemistry\Toast\Translation;
 
-use Nette\Localization\ITranslator;
+use Nette\Localization\Translator;
 
-final class ArrayTranslator implements ITranslator
+final class ArrayTranslator implements Translator
 {
 
 	/** @var string[] */

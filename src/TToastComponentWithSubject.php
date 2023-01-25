@@ -10,6 +10,10 @@ trait TToastComponentWithSubject
 	final public function injectTToastPresenter(IToastComponentFactory $toastComponentFactory): void
 	{
 		$this->toastComponentFactory = $toastComponentFactory;
+
+		$this->onRender[] = function (): void {
+			$this['toast']; // autostart session
+		};
 	}
 
 	protected function createComponentToast(): IToastComponent
