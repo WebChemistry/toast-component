@@ -7,13 +7,18 @@ trait TToastComponent
 
 	private IToastComponentFactory $toastComponentFactory;
 
-	final public function injectTToastPresenter(IToastComponentFactory $toastComponentFactory): void
+	final public function injectTToastComponent(IToastComponentFactory $toastComponentFactory): void
 	{
 		$this->toastComponentFactory = $toastComponentFactory;
 
 		$this->onRender[] = function (): void {
 			$this['toast']; // autostart session
 		};
+	}
+
+	public function getToastComponent(): IToastComponent
+	{
+		return $this['toast'];
 	}
 
 	protected function createComponentToast(): IToastComponent

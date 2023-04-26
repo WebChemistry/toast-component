@@ -4,6 +4,7 @@ namespace WebChemistry\Toast;
 
 use Nette\Application\UI\Control;
 use Nette\Localization\Translator;
+use Nette\Utils\Helpers;
 
 final class ToastComponent extends Control implements IToastComponent
 {
@@ -75,6 +76,21 @@ final class ToastComponent extends Control implements IToastComponent
 		}
 
 		return $this->flashes;
+	}
+
+	public function requestRedraw(): void
+	{
+		$this->redrawControl();
+	}
+
+	public function requestPayload(): void
+	{
+		$this->redrawControl();
+		$this->snippetMode = true;
+
+		Helpers::capture(function (): void {
+			$this->render();
+		});
 	}
 
 	public function render(): void

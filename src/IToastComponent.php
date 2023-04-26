@@ -13,4 +13,8 @@ interface IToastComponent
 
 	public function setCallbackTranslator(callable $translator): static;
 
+	public function requestRedraw(): void;
+
+	public function requestPayload(): void;
+
 }
